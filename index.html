@@ -1,0 +1,905 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PODS | Community Hub & Piattaforma Operativa Interna</title>
+  <meta name="description" content="Piattaforma interna, community directory con AI web scraping, dashboard iniziative Google Drive, calendario condiviso e mappa territoriale di PODS - Piemonte Orientale Digitale e Solidale APS ETS.">
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <!-- Leaflet Interactive Map CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <link rel="stylesheet" href="css/pods-theme.css">
+</head>
+<body id="top">
+
+  <!-- OFFICIAL PODS HEADER (ALLINEATO A ASSOCIAZIONE-PODS.IT) -->
+  <header class="site-header" id="topHeader">
+    <div class="hdr">
+      <a class="brand" href="#top" aria-label="PODS — Piemonte Orientale Digitale e Solidale" onclick="window.switchTab('starthere');">
+        <svg class="brand-logo" viewBox="121 1028 962 336" aria-hidden="true">
+          <use href="img/sprite.svg#p-letters"/>
+        </svg>
+        <span class="sr">PODS</span>
+      </a>
+
+      <!-- Navigation Tabs -->
+      <nav class="nav" aria-label="Navigazione Principale">
+        <button class="nav-tab-btn active" data-tab="starthere">
+          🚀 Inizia da qui
+        </button>
+        <button class="nav-tab-btn" data-tab="directory">
+          Membri
+          <span class="nav-badge-count" id="navCountMembers">2</span>
+        </button>
+        <button class="nav-tab-btn" data-tab="projects">
+          Iniziative
+          <span class="nav-badge-count" id="navCountProjects">6</span>
+        </button>
+        <button class="nav-tab-btn" data-tab="territory">
+          Territorio & Mappa
+        </button>
+        <button class="nav-tab-btn" data-tab="calendar">
+          Calendario & Meet
+          <span class="nav-badge-count" id="navCountEvents">4</span>
+        </button>
+      </nav>
+
+      <!-- Action Tools -->
+      <div class="header-tools">
+        <!-- User Account Pill -->
+        <button class="user-profile-btn" id="userAccountBtn" title="Gestisci il tuo profilo o accedi">
+          <img src="https://ui-avatars.com/api/?name=PODS&background=2867AE&color=fff&size=80" alt="Avatar Utente" id="userAccountAvatar" class="user-profile-avatar">
+          <span id="userAccountName">Account</span>
+          <span style="font-size: 0.7rem; opacity: 0.6;">▼</span>
+        </button>
+
+        <!-- Add Member Button -->
+        <button class="btn-nav-cta" id="btnAddMember">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          + Iscriviti / Nuova Scheda
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN WRAPPER -->
+  <main class="main-wrapper">
+
+    <!-- ======================================================================
+         MINI SEZIONE FISSA NELLA HERO: "COS'È PODS IN BREVE"
+         ====================================================================== -->
+    <section class="pods-mini-about-strip" aria-label="Cos'è PODS in breve">
+      <div class="pods-mini-about-content">
+        <span class="pods-mini-about-badge">
+          🏛️ COS'È PODS • PIEMONTE ORIENTALE DIGITALE E SOLIDALE APS ETS (RUNTS N. 182788)
+        </span>
+        <div class="pods-mini-about-title">
+          Una rete no-profit di competenze digitali, tecnologiche e di consulenza per le <span class="hl-mark">6 province del Piemonte Orientale</span>.
+        </div>
+        <p class="pods-mini-about-text">
+          Riuniamo circa <strong>100 professionisti, manager, ricercatori e docenti</strong> originari o attivi tra <strong>Vercelli, Novara, Alessandria, Asti, Biella e VCO</strong> che restituiscono <em>pro bono</em> tempo ed esperienze a scuole superiori, Università (UPO), imprese, PA ed enti del Terzo Settore.
+        </p>
+      </div>
+      <div class="pods-mini-about-actions">
+        <a href="https://drive.google.com/drive/folders/1rX1dbH6xZHHJVV37m48vLo67rUwWoTbk" target="_blank" rel="noopener" class="btn btn-line" style="padding: 8px 14px; font-size: 0.8rem; border-radius: 999px; font-weight: 800; text-decoration: none; border: 1.5px solid var(--ink); color: var(--ink); text-align: center; white-space: nowrap;">
+          📂 Cartella Google Drive Condivisa ↗
+        </a>
+        <a href="https://associazione-pods.it/" target="_blank" rel="noopener" style="font-size: 0.78rem; font-weight: 800; color: var(--blue); text-align: center; text-decoration: underline;">
+          Sito Ufficiale associazione-pods.it ↗
+        </a>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         VIEW 0: INIZIA DA QUI (START HERE HUB & WHATSAPP DIRECTORY)
+         ====================================================================== -->
+    <section id="viewStartHere" class="view-panel" style="display: block;">
+      <div class="start-here-hero">
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div class="dash-pill-lead" style="background: rgba(40,103,174,0.12); color: var(--blue);">
+            👋 Benvenuto nell'Hub Operativo PODS • Inizia da qui
+          </div>
+          <h1 class="dash-h1" style="font-size: clamp(1.8rem, 3.2vw, 2.5rem);">
+            Crea la tua scheda socio con l'AI, entra nei <span class="hl-mark">gruppi WhatsApp</span> e segui i cantieri.
+          </h1>
+          <p class="dash-desc" style="max-width: 780px;">
+            Stiamo costruendo l'anagrafe operativa dei soci PODS. Inserisci il tuo nome e il tuo indirizzo di casa o di lavoro: 
+            <strong>la nostra AI (Gemini) cercherà sul web il tuo profilo e il tuo LinkedIn</strong> per precompilare la scheda, che potrai modificare liberamente.
+          </p>
+        </div>
+
+        <!-- 3 Quick Steps -->
+        <div class="start-steps-grid">
+          <div class="step-card">
+            <span class="step-badge">PASSO 1</span>
+            <h3 class="step-title">✨ Crea la tua Scheda con l'AI</h3>
+            <p class="step-desc">
+              Inserisci Nome, Cognome, Città e Indirizzo: l'AI effettua lo scraping sul web per compilare ruolo, azienda, bio, superpoteri e link LinkedIn, posizionandoti sulla mappa del territorio.
+            </p>
+            <button class="btn btn-ink" onclick="window.openNewMemberModal();" style="margin-top: auto; padding: 10px 18px; border-radius: 999px; font-size: 0.84rem; font-weight: 800; background: var(--blue); color: #fff; border: none; cursor: pointer;">
+              + Crea la tua Scheda Socio con AI
+            </button>
+          </div>
+
+          <div class="step-card">
+            <span class="step-badge">PASSO 2</span>
+            <h3 class="step-title">💬 Entra nella Community WhatsApp</h3>
+            <p class="step-desc">
+              Accedi direttamente al gruppo operativo <strong>Startup & Ecosistemi</strong> con il link d'invito ufficiale e scopri i gruppi tematici della Community "Associazione Culturale PODS".
+            </p>
+            <a href="#canali-whatsapp" class="btn btn-line" style="margin-top: auto; padding: 10px 18px; border-radius: 999px; font-size: 0.84rem; font-weight: 800; border: 1.5px solid var(--ink); text-align: center; text-decoration: none; color: var(--ink);">
+              Vai al Gruppo WhatsApp ↓
+            </a>
+          </div>
+
+          <div class="step-card">
+            <span class="step-badge">PASSO 3</span>
+            <h3 class="step-title">📂 Esplora le 6 Iniziative & Mappa</h3>
+            <p class="step-desc">
+              Consulta le dashboard rielaborate dai file reali del nostro Google Drive condiviso (Scuole, Silicon Box, Data Center 400MW, Mentoring UPO) e guarda la mappa interattiva.
+            </p>
+            <button class="btn btn-ink" onclick="window.switchTab('projects');" style="margin-top: auto; padding: 10px 18px; border-radius: 999px; font-size: 0.84rem; font-weight: 800; background: var(--ink); color: #fff; border: none; cursor: pointer;">
+              Apri le 6 Iniziative & Drive →
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- WhatsApp Groups Section -->
+      <div id="canali-whatsapp" style="margin-top: 36px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <span style="font-size: 0.78rem; font-weight: 800; text-transform: uppercase; color: #128C7E; letter-spacing: 0.05em;">Canali di Comunicazione Ufficiali</span>
+            <h2 style="font-size: 1.7rem; font-weight: 900; color: var(--ink); letter-spacing: -0.02em;">I Gruppi WhatsApp di PODS</h2>
+          </div>
+          <span style="font-size: 0.84rem; color: var(--ink-soft);">Community ufficiale WhatsApp "Associazione Culturale PODS"</span>
+        </div>
+
+        <div class="whatsapp-grid" id="whatsappGroupsContainer">
+          <!-- Popolato via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         VIEW 1: DIRECTORY SOCI (SOLO 2 PLACEHOLDER + SOCI REALI ISCRITTI NEL DB)
+         ====================================================================== -->
+    <section id="viewDirectory" class="view-panel" style="display: none;">
+      <section class="dash-banner" aria-label="Dashboard Panoramica" style="margin-bottom: 24px;">
+        <div class="dash-headline-group">
+          <div class="dash-pill-lead">
+            👥 Anagrafe & Directory Soci • Database Attivo
+          </div>
+          <h1 class="dash-h1">
+            I Membri di <span class="hl-mark">PODS sul Territorio</span>
+          </h1>
+          <p class="dash-desc">
+            Qui sotto trovi <strong>2 schede di esempio (placeholder)</strong> più tutti i <strong>soci reali</strong> man mano che si iscrivono. 
+            Clicca su <strong>"+ Iscriviti / Nuova Scheda"</strong> per inserire i tuoi dati con l'aiuto dell'AI e comparire sia qui che sulla Mappa del Territorio!
+          </p>
+        </div>
+
+        <!-- Quick Metrics Row -->
+        <div class="metrics-grid">
+          <div class="metric-glass-card">
+            <div class="metric-val" id="statMembers">2 <span>schede</span></div>
+            <div class="metric-label" id="statMembersSub">Database Soci Attivo</div>
+          </div>
+          <div class="metric-glass-card">
+            <div class="metric-val" id="statProvinces">7 <span>province</span></div>
+            <div class="metric-label">VC • NO • AL • AT • BI • VB • TO</div>
+          </div>
+          <div class="metric-glass-card">
+            <div class="metric-val" id="statProjects">6 <span>iniziative</span></div>
+            <div class="metric-label">Sincronizzate col Drive</div>
+          </div>
+          <div class="metric-glass-card">
+            <div class="metric-val" id="statVolHours">23 <span>nodi</span></div>
+            <div class="metric-label">Mappati sul Territorio</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BANNER MATCHING CAFFÈ VIRTUALE TRA SOCI -->
+      <section class="icebreaker-banner" aria-label="Matching Caffè Digitale tra Soci" style="margin-bottom: 24px; border: 2px solid var(--yellow); box-shadow: 0 4px 16px rgba(244, 211, 94, 0.22);">
+        <div class="icebreaker-left">
+          <div class="ice-icon-circle">☕</div>
+          <div>
+            <div class="ice-title">Rompi il ghiaccio: Caffè Digitale tra Soci PODS</div>
+            <p class="ice-sub">
+              Connettiti per una call informale di 15-30 minuti su Google Meet con altri soci. Fatti abbinare a sorpresa con lo Smart Matching o scegli un profilo dall'elenco per fissare subito l'incontro sul rispettivo Google Calendar!
+            </p>
+          </div>
+        </div>
+        <div class="icebreaker-actions">
+          <button type="button" class="btn-icebreaker-coffee" onclick="window.triggerSmartCoffeeMatch()">
+            🎲 Match a Sorpresa con un Socio
+          </button>
+        </div>
+      </section>
+
+      <!-- PROVINCE STRIP (PIEMONTE ORIENTALE 6 PROVINCE) -->
+      <section class="provinces-glass-strip" aria-label="Filtro Province" style="margin-bottom: 24px;">
+        <div class="strip-header">
+          <div class="strip-title-group">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span class="strip-title">Filtra per Provincia del Piemonte Orientale</span>
+          </div>
+          <button class="btn-skill-match" onclick="window.switchTab('territory'); window.setTerritoryMapMode('members');" style="padding: 6px 14px; font-size: 0.8rem;">
+            🗺️ Vedi i Membri sulla Mappa Interattiva →
+          </button>
+        </div>
+
+        <div class="provinces-cards-row" id="provincesStrip">
+          <!-- Generato via JS -->
+        </div>
+      </section>
+
+      <!-- Search and Filter Controls -->
+      <div class="controls-glass-panel">
+        <div class="search-primary-row">
+          <div class="search-input-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" class="search-input" placeholder="Cerca socio per nome, cognome, azienda, città, indirizzo, competenza...">
+          </div>
+
+          <select id="roleFilter" class="filter-select" aria-label="Filtra per Ruolo">
+            <option value="all">Tutti i Ruoli Associativi</option>
+            <option value="Socio Fondatore">Socio Fondatore</option>
+            <option value="Consiglio Direttivo">Consiglio Direttivo</option>
+            <option value="Socio Operativo">Socio Operativo</option>
+            <option value="Mentor Senior">Mentor Senior</option>
+            <option value="Young Ambassador">Young Ambassador</option>
+          </select>
+
+          <button class="btn-skill-match" id="btnExportCSV" title="Esporta l'elenco soci in formato CSV">
+            📥 Esporta CSV
+          </button>
+        </div>
+
+        <!-- Quick Filter Tags: Settori -->
+        <div class="sector-tags-row" id="sectorFilterChips">
+          <!-- Generato via JS -->
+        </div>
+
+        <!-- Active Results Bar -->
+        <div class="results-summary-row">
+          <div class="results-count" id="resultsCount">
+            Mostrando <span>2</span> schede
+          </div>
+          <div class="active-filters-chips" style="display: flex; gap: 14px; align-items: center;">
+            <button class="btn-reset-filters" id="btnResetFilters">Azzera tutti i filtri</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Members Cards Grid -->
+      <div class="members-grid" id="membersGrid" style="margin-top: 24px;">
+        <!-- Card generate dinamicamente da app.js -->
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         VIEW 2: INIZIATIVE (TUTTE COME SCHEDE UNIFORMI CLICCABILI + DASHBOARD DRIVE)
+         ====================================================================== -->
+    <section id="viewProjects" class="view-panel" style="display: none;">
+
+      <!-- SOTTO-VISTA A: GRIGLIA DI TUTTE LE 6 SCHEDE INIZIATIVE (INCLUSA ECOSISTEMI DELL'INNOVAZIONE) -->
+      <div id="projectsGridView">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; margin-bottom: 28px;">
+          <div>
+            <div class="dash-pill-lead" style="background: rgba(40,103,174,0.1); color: var(--blue);">
+              📂 Cantieri Operativi Sincronizzati con Google Drive
+            </div>
+            <h1 class="dash-h1" style="font-size: clamp(1.8rem, 3.2vw, 2.5rem); margin-top: 8px;">
+              Le Iniziative di <span class="hl-mark hl-y">PODS sul Territorio</span>
+            </h1>
+            <p class="dash-desc" style="max-width: 820px;">
+              Ogni scheda corrisponde a una cartella operativa del nostro Google Drive condiviso. 
+              <strong>Clicca su qualsiasi iniziativa</strong> per aprire la sua <strong>Dashboard</strong> con il link diretto alla cartella Drive, la rielaborazione dei file più aperti/recenti e i dati operativi.
+            </p>
+          </div>
+          <a href="https://drive.google.com/drive/folders/1rX1dbH6xZHHJVV37m48vLo67rUwWoTbk" target="_blank" rel="noopener" class="btn btn-ink" style="padding: 12px 20px; border-radius: 999px; font-weight: 800; text-decoration: none; background: var(--ink); color: #fff;">
+            📂 Apri Drive Generale PODS ↗
+          </a>
+        </div>
+
+        <div class="initiatives-uniform-grid" id="projectsListContainer">
+          <!-- Tutte le 6 iniziative (inclusa Ecosistemi dell'Innovazione) generate come schede uniformi cliccabili via JS -->
+        </div>
+      </div>
+
+      <!-- SOTTO-VISTA B: DASHBOARD INTERNA DELLA SINGOLA INIZIATIVA CLICCATA -->
+      <div id="initiativeDashboardView" style="display: none;">
+        <!-- Popolata dinamicamente da openInitiativeDashboard(projectId) in app.js -->
+      </div>
+
+    </section>
+
+    <!-- ======================================================================
+         VIEW 3: TERRITORIO & MAPPA INTERATTIVA (SWITCH INIZIATIVE/SCUOLE/HUB vs MEMBRI)
+         ====================================================================== -->
+    <section id="viewTerritory" class="view-panel" style="display: none;">
+      <div style="margin-bottom: 22px;">
+        <div class="dash-pill-lead" style="background: rgba(40,103,174,0.1); color: var(--blue);">
+          🗺️ Geografia Associativa & Presidio nelle 6 Province
+        </div>
+        <h1 class="dash-h1" style="font-size: clamp(1.8rem, 3vw, 2.4rem); margin-top: 8px;">
+          Mappa del <span class="hl-mark">Territorio & della Community</span>
+        </h1>
+        <p class="dash-desc" style="max-width: 860px;">
+          Esplora i punti reali estratti dalla nostra cartella Google Drive (le <strong>scuole superiori</strong> di <em>"Intelligenti, non artificiali"</em>, <strong>Silicon Box</strong> a Novara, il <strong>Data Center 400MW</strong> a Trino Vercellese, i <strong>poli UPO</strong> e il <strong>Corso Branding</strong> ad Alessandria) oppure <strong>switcha la visualizzazione per vedere dove si collocano i membri PODS</strong> in base al loro indirizzo di casa o di lavoro.
+        </p>
+      </div>
+
+      <!-- INTERACTIVE MAP SHELL -->
+      <div class="territory-map-shell">
+        <div class="map-controls-bar">
+          <!-- Switch Principale: Iniziative/Scuole/Silicon Box vs Membri -->
+          <div class="map-mode-switcher">
+            <button type="button" class="map-mode-btn active" id="btnMapModeInitiatives" onclick="window.setTerritoryMapMode('initiatives')">
+              🏛️ Iniziative, Scuole & Poli (Silicon Box, Data Center, UPO)
+            </button>
+            <button type="button" class="map-mode-btn" id="btnMapModeMembers" onclick="window.setTerritoryMapMode('members')">
+              👥 Dove sono i Membri PODS (Indirizzi & Province)
+            </button>
+          </div>
+
+          <!-- Sotto-filtri per categoria (visibili in modalità Iniziative) -->
+          <div class="map-subfilters-row" id="mapCategoryFilters">
+            <button type="button" class="sector-pill active" data-mapcat="all" onclick="window.setTerritoryCategoryFilter('all')">Tutti (22)</button>
+            <button type="button" class="sector-pill" data-mapcat="school" onclick="window.setTerritoryCategoryFilter('school')">🏫 Scuole AI (14)</button>
+            <button type="button" class="sector-pill" data-mapcat="hub" onclick="window.setTerritoryCategoryFilter('hub')">🚀 Silicon Box & Data Center (3)</button>
+            <button type="button" class="sector-pill" data-mapcat="university" onclick="window.setTerritoryCategoryFilter('university')">🎓 Campus UPO & Comuni (5)</button>
+          </div>
+
+          <!-- Bottone rapido per aggiungersi alla mappa (visibile in modalità Membri) -->
+          <div id="mapMembersActionBox" style="display: none;">
+            <button type="button" class="btn btn-ink" onclick="window.openNewMemberModal();" style="background: var(--blue); color: #fff; border: none; padding: 9px 16px; border-radius: 999px; font-size: 0.82rem; font-weight: 800; cursor: pointer;">
+              📍 + Aggiungi il tuo Indirizzo sulla Mappa
+            </button>
+          </div>
+        </div>
+
+        <!-- Mappa Leaflet -->
+        <div id="podsInteractiveMap"></div>
+
+        <!-- Legenda Mappa -->
+        <div class="map-legend-row" id="mapLegendBar">
+          <span class="legend-item"><span class="legend-dot" style="background: #E5C95C;"></span> 🏫 Scuole "Intelligenti, non artificiali"</span>
+          <span class="legend-item"><span class="legend-dot" style="background: #2867AE;"></span> 🚀 Silicon Box (NO), Data Center 400MW (Trino VC) & Sede PODS</span>
+          <span class="legend-item"><span class="legend-dot" style="background: #AE75A7;"></span> 🎓 Campus UPO, Mentoring SUN & Corso Branding AL</span>
+          <span class="legend-item"><span class="legend-dot" style="background: #99C454;"></span> 👤 Membri PODS (Indirizzo Casa/Lavoro)</span>
+        </div>
+      </div>
+
+      <!-- Riepilogo Provinciale e Vocazioni -->
+      <div class="territory-view-grid">
+        <div class="territory-glass-box">
+          <h2 class="box-title">Distribuzione Soci per Provincia</h2>
+          <p style="color: var(--ink-soft); font-size: 0.92rem; line-height: 1.5;">
+            Conteggio in tempo reale dei profili registrati nelle 6 province del Piemonte Orientale.
+          </p>
+          <div class="prov-bars-list" id="provDistributionList">
+            <!-- Barre generate via JS -->
+          </div>
+        </div>
+
+        <div class="territory-glass-box" style="background: #ffffff;">
+          <h2 class="box-title">Poli Strategici Mappati dal Google Drive</h2>
+          <div style="display: flex; flex-direction: column; gap: 14px; font-size: 0.9rem; line-height: 1.55; color: var(--ink);">
+            <div style="background: rgba(40,103,174,0.1); padding: 14px; border-radius: 12px; border-left: 4px solid var(--blue);">
+              <strong>🚀 Novara & Vercelli (Grandi Insediamenti & Scuole):</strong><br>
+              Gigafactory <strong>Silicon Box</strong> a Novara, <strong>Data Center 400MW TechBau</strong> a Trino Vercellese, Rettorato e Campus UPO, più 11 istituti superiori tra cui <em>ITIS Fauser, Nervi, Carlo Alberto, Omar</em> (NO) e <em>Faccio, Lagrangia, Avogadro</em> (VC).
+            </div>
+            <div style="background: rgba(174,117,167,0.12); padding: 14px; border-radius: 12px; border-left: 4px solid var(--purple);">
+              <strong>🏛️ Alessandria, Casale, Novi & Asti:</strong><br>
+              <strong>Corso Branding & Ascolto Pubblico</strong> con DIGSPES UPO, Comune di Alessandria e Alexala; laboratori AI presso <em>Saluzzo-Plana, ITIS Volta</em> (AL), <em>Sobrero</em> (Casale Monf.), <em>Liceo Amaldi</em> (Novi Ligure) e Polo Astiss (AT).
+            </div>
+            <div style="background: rgba(153,196,84,0.15); padding: 14px; border-radius: 12px; border-left: 4px solid var(--green);">
+              <strong>🏔️ Biella & Verbano-Cusio-Ossola:</strong><br>
+              Connessione con <strong>Città Studi Biella</strong>, Unione Industriale Biellese, filiera tessile sostenibile UNESCO e presidio delle comunità alpine del VCO.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         VIEW 4: CALENDARIO CONDIVISO & RIUNIONI GOOGLE MEET
+         ====================================================================== -->
+    <section id="viewCalendar" class="view-panel" style="display: none;">
+      <div class="calendar-view-header" style="margin-bottom: 20px;">
+        <div>
+          <span style="font-size: 0.76rem; font-weight: 800; text-transform: uppercase; color: var(--blue);">Coordinamento Incontri & Riunioni</span>
+          <h2 style="font-size: 1.8rem; font-weight: 900; color: var(--ink);">Calendario Condiviso PODS</h2>
+          <p style="font-size: 0.88rem; color: var(--ink-soft); margin-top: 2px;">
+            Incontri plenari, laboratori nelle scuole, mentoring e riunioni operative con link Meet diretto, sincronizzazione in tempo reale su Google Calendar e verbali.
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="btn btn-ink" id="btnOpenAddEvent" style="background: var(--blue); color: #fff; border: none; padding: 11px 20px; border-radius: 999px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+            + Aggiungi Incontro
+          </button>
+          <button class="btn-gcal-sync" id="btnOpenGcalSync" title="Sincronizza automaticamente con Google Calendar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="3" stroke="#1a73e8" stroke-width="2"/><path d="M16 2v4M8 2v4M3 10h18" stroke="#1a73e8" stroke-width="2"/><circle cx="12" cy="15" r="2" fill="#1a73e8"/></svg>
+            Sincronizza Google Calendar
+          </button>
+        </div>
+      </div>
+
+      <!-- Barra strumenti vista calendario e download -->
+      <div class="calendar-top-bar">
+        <!-- Selettore vista: Elenco / Mese / Settimana -->
+        <div class="calendar-view-toggles">
+          <button class="cal-toggle-btn active" id="btnCalViewList" onclick="window.switchCalendarView('list')">
+            📋 Elenco
+          </button>
+          <button class="cal-toggle-btn" id="btnCalViewMonth" onclick="window.switchCalendarView('month')">
+            📅 Vista Mese
+          </button>
+          <button class="cal-toggle-btn" id="btnCalViewWeek" onclick="window.switchCalendarView('week')">
+            📆 Vista Settimana
+          </button>
+        </div>
+
+        <!-- Azioni rapide esportazione & feed -->
+        <div class="calendar-actions-group">
+          <button class="btn-cal-download" id="btnDownloadIcsDirect" onclick="window.downloadCalendarIcs()" title="Scarica file iCalendar .ics">
+            📥 Scarica .ics
+          </button>
+          <button class="btn-cal-download" onclick="window.copyLiveCalendarFeed()" title="Copia link feed iCal per Apple/Outlook/Google Calendar">
+            🔗 Copia Feed Live
+          </button>
+        </div>
+      </div>
+
+      <!-- Barra navigazione temporale Mese / Settimana (visibile solo in vista Mese o Settimana) -->
+      <div class="cal-nav-bar" id="calendarNavBar" style="display: none;">
+        <button class="cal-nav-btn" onclick="window.navigateCalendar(-1)">
+          ‹ Precedente
+        </button>
+        <span class="cal-nav-title" id="calendarNavTitle">Novembre 2026</span>
+        <div style="display: flex; gap: 8px;">
+          <button class="cal-nav-btn" onclick="window.navigateCalendar(0)" style="font-weight: 800; background: var(--blue); color: #fff; border-color: var(--blue);">
+            Oggi
+          </button>
+          <button class="cal-nav-btn" onclick="window.navigateCalendar(1)">
+            Successivo ›
+          </button>
+        </div>
+      </div>
+
+      <!-- VISTA 1: Elenco Incontri a schede dettagliate -->
+      <div class="events-list-container" id="calendarEventsContainer">
+        <!-- Generato via JS -->
+      </div>
+
+      <!-- VISTA 2: Griglia Calendario Mensile -->
+      <div id="calendarMonthContainer" style="display: none;">
+        <!-- Generato via JS -->
+      </div>
+
+      <!-- VISTA 3: Griglia Vista Settimanale -->
+      <div id="calendarWeekContainer" style="display: none;">
+        <!-- Generato via JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ======================================================================
+       MODALS
+       ====================================================================== -->
+
+  <!-- MODAL: DETTAGLIO PROFILO SOCIO -->
+  <div class="modal-overlay" id="profileModal" aria-modal="true" role="dialog">
+    <div class="modal-glass-container">
+      <button class="btn-close-modal" aria-label="Chiudi Modale">✕</button>
+      <div id="profileModalBody"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: ROMPIGHIACCIO CAFFÈ DIGITALE -->
+  <div class="modal-overlay" id="coffeeModal" aria-modal="true" role="dialog">
+    <div class="modal-glass-container" style="max-width: 580px;">
+      <button class="btn-close-modal" aria-label="Chiudi Modale">✕</button>
+      <div id="coffeeModalBody"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: ACCOUNT UTENTE / CAMBIA PROFILO -->
+  <div class="modal-overlay" id="accountModal" aria-modal="true" role="dialog">
+    <div class="modal-glass-container" style="max-width: 540px;">
+      <button class="btn-close-modal" aria-label="Chiudi Modale">✕</button>
+      <div id="accountModalBody"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: AGGIUNGI O MODIFICA LA TUA SCHEDA CON AI (GEMINI WEB SCRAPING) -->
+  <div class="modal-overlay" id="addMemberModal" aria-modal="true" role="dialog">
+    <div class="modal-glass-container">
+      <button class="btn-close-modal" aria-label="Chiudi Modale">✕</button>
+      
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <span class="card-role-pod" style="width: fit-content;">Onboarding Intelligente + Database Soci</span>
+        <h2 id="memberModalTitle" style="font-size: 1.6rem; font-weight: 900; color: var(--ink);">Crea o Modifica la tua Scheda Socio PODS</h2>
+        <p style="font-size: 0.88rem; color: var(--ink-soft);">
+          Inserisci <strong>Nome e Cognome</strong> e clicca su <strong>"✨ Cerca sul Web & Compila con AI"</strong>: il nostro backend interrogherà il web e LinkedIn per precompilare tutti i campi, che potrai rivedere e modificare prima di salvare.
+        </p>
+      </div>
+
+      <!-- AI Enricher Banner -->
+      <div style="background: var(--card-b); border: 1.5px solid var(--blue); border-radius: 14px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
+        <div>
+          <div style="font-weight: 900; font-size: 0.95rem; color: var(--ink);">✨ Auto-Compilazione AI con Web Scraping & LinkedIn</div>
+          <p style="font-size: 0.82rem; color: var(--ink-soft); margin-top: 2px;">Cerca informazioni reali sulla persona (ruolo, azienda, bio, competenze e URL LinkedIn).</p>
+        </div>
+        <button type="button" class="btn-ai-enrich" id="btnAiEnrich">
+          ✨ Cerca sul Web & Compila con AI
+        </button>
+      </div>
+
+      <!-- AI Scanning Status (hidden by default) -->
+      <div id="aiScanStatus" class="ai-scan-banner" style="display: none;">
+        <div class="ai-scan-spinner"></div>
+        <span id="aiScanText" style="font-size: 0.88rem; font-weight: 700; color: var(--blue);">Ricerca sul web e su LinkedIn in corso...</span>
+      </div>
+
+      <!-- Box Fonti Web Trovate dall'AI -->
+      <div id="aiSourcesBox" style="display: none; background: var(--gray-light); border: 1px solid var(--gray-border); border-radius: 10px; padding: 10px 14px; font-size: 0.8rem; color: var(--ink-soft);"></div>
+
+      <form id="addMemberForm" style="display: flex; flex-direction: column; gap: 15px;">
+        <input type="hidden" name="editMemberId" id="editMemberId" value="">
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Nome *</label>
+            <input type="text" name="firstName" class="form-input" required placeholder="Es. Lorenzo">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Cognome *</label>
+            <input type="text" name="lastName" class="form-input" required placeholder="Es. Losciale">
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Provincia di Riferimento *</label>
+            <select name="province" class="form-select" required>
+              <option value="Vercelli">Vercelli (VC)</option>
+              <option value="Novara">Novara (NO)</option>
+              <option value="Alessandria">Alessandria (AL)</option>
+              <option value="Asti">Asti (AT)</option>
+              <option value="Biella">Biella (BI)</option>
+              <option value="Verbano-Cusio-Ossola">Verbano-Cusio-Ossola (VB)</option>
+              <option value="Torino">Torino (TO)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Città / Comune *</label>
+            <input type="text" name="city" class="form-input" required placeholder="Es. Vercelli / Novara / Alessandria / Torino">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">📍 Indirizzo di Casa o di Lavoro (per collocarti sulla Mappa del Territorio) *</label>
+          <input type="text" name="address" class="form-input" required placeholder="Es. Via Gaudenzio Ferrari 17, Vercelli (oppure Via e Città della tua sede di lavoro)">
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Ambito Professionale *</label>
+            <select name="primarySector" class="form-select" required>
+              <option value="AI & Data Science">AI & Data Science</option>
+              <option value="Scuola & Didattica">Scuola & Didattica</option>
+              <option value="Università & Ricerca">Università & Ricerca</option>
+              <option value="Impresa & Advisory">Impresa & Advisory</option>
+              <option value="Terzo Settore & ETS">Terzo Settore & ETS</option>
+              <option value="Comunicazione & Media">Comunicazione & Media</option>
+              <option value="ICT, Software & Cybersecurity">ICT, Software & Cybersecurity</option>
+              <option value="Sostenibilità, ESG & Agritech">Sostenibilità, ESG & Agritech</option>
+              <option value="Sanità, MedTech & Life Sciences">Sanità, MedTech & Life Sciences</option>
+              <option value="Manifattura, Design & Ingegneria">Manifattura, Design & Ingegneria</option>
+              <option value="Legale, Fiscale & Compliance">Legale, Fiscale & Compliance</option>
+              <option value="HR, Coaching & Organizzazione">HR, Coaching & Organizzazione</option>
+              <option value="Finanza, Fintech & Mercati">Finanza, Fintech & Mercati</option>
+              <option value="PA Locale & Policy Pubbliche">PA Locale & Policy Pubbliche</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Ruolo in PODS *</label>
+            <select name="role" class="form-select" required>
+              <option value="Socio Operativo">Socio Operativo</option>
+              <option value="Socio Fondatore">Socio Fondatore</option>
+              <option value="Mentor Senior">Mentor Senior</option>
+              <option value="Consiglio Direttivo">Consiglio Direttivo</option>
+              <option value="Young Ambassador">Young Ambassador</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Titolo Professionale Corrente *</label>
+            <input type="text" name="headline" class="form-input" required placeholder="Es. Senior Consultant / Docente / Ricercatore">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Azienda, Università, Scuola o Ente</label>
+            <input type="text" name="organization" class="form-input" placeholder="Es. UPO / Reply / ITIS Fauser / Freelance">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">🔗 Profilo LinkedIn (URL compilato dall'AI o manuale)</label>
+          <input type="text" name="linkedin" class="form-input" placeholder="https://www.linkedin.com/in/nome-cognome">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Presentazione Personale ("Chi sono e le mie esperienze")</label>
+          <textarea name="bio" class="form-textarea" rows="3" placeholder="Breve descrizione generata dall'AI o scritta da te..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">I tuoi Superpoteri / Competenze (separati da virgola)</label>
+          <input type="text" name="superpowers" class="form-input" placeholder="Es. AI Generativa, Design Thinking, Project Management, Mentoring">
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Iniziative / Con chi vuoi collaborare</label>
+            <input type="text" name="lookingFor" class="form-input" placeholder="Es. Tavolo Ecosistemi, Scuole AI, Mentoring UPO">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Disponibilità indicativa *</label>
+            <select name="availability" class="form-select" required>
+              <option value="2-3 ore/mese (Tavoli di lavoro & Meet serali)">2-3 ore/mese (Tavoli di lavoro & Meet serali)</option>
+              <option value="4-5 ore/mese (Mentoring studenti & Workshop)">4-5 ore/mese (Mentoring studenti & Workshop)</option>
+              <option value="1-2 ore/mese (Assemblee & Iniziative aperte)">1-2 ore/mese (Assemblee & Iniziative aperte)</option>
+              <option value="Più di 5 ore/mese (Coordinamento cantieri & Progetti)">Più di 5 ore/mese (Coordinamento cantieri & Progetti)</option>
+              <option value="Su richiesta / On call (Consulenze e supporto puntuale)">Su richiesta / On call (Consulenze e supporto puntuale)</option>
+              <option value="Weekend / Incontri ed eventi in presenza">Weekend / Incontri ed eventi in presenza</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Email di contatto *</label>
+            <input type="email" name="email" class="form-input" required placeholder="nome.cognome@esempio.it">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Telefono / WhatsApp (Opzionale)</label>
+            <input type="text" name="phone" class="form-input" placeholder="+39 340 ...">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">📅 Link Personale Google Calendar / Appuntamenti (Opzionale)</label>
+          <input type="url" name="calendarLink" class="form-input" placeholder="Es. https://calendar.app.google/... o link Calendly personale">
+          <small style="color: var(--ink-soft); font-size: 0.74rem;">Se possiedi una pagina appuntamenti di Google Calendar o Calendly, incollala qui: i soci potranno prenotare direttamente uno slot sul tuo calendario personale.</small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">📸 Foto Profilo (Estratta automaticamente da LinkedIn / Web o URL personalizzato)</label>
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <div id="photoPreviewContainer" style="width: 52px; height: 52px; border-radius: 50%; border: 2px solid var(--blue); overflow: hidden; flex-shrink: 0; background: var(--gray); display: flex; align-items: center; justify-content: center;">
+              <img id="photoPreviewImg" src="https://ui-avatars.com/api/?name=PODS&background=2867AE&color=fff" alt="Anteprima Foto" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <input type="url" name="photo" id="memberPhotoInput" class="form-input" style="flex: 1;" placeholder="https://... (compilata in automatico da LinkedIn o lascia vuoto)">
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px; margin-top: 2px;">
+          <input type="checkbox" name="coffee" id="checkCoffee" checked style="width: 18px; height: 18px; cursor: pointer;">
+          <label for="checkCoffee" style="font-size: 0.88rem; font-weight: 700; color: var(--ink); cursor: pointer;">
+            ☕ Disponibile per un "Caffè Digitale" di 15 min su Meet con altri soci
+          </label>
+        </div>
+
+        <button type="submit" id="btnSubmitMemberForm" class="btn btn-ink" style="width: 100%; padding: 14px; border-radius: 999px; font-weight: 800; background: var(--blue); color: #fff; border: none; cursor: pointer; margin-top: 6px;">
+          💾 Salva Scheda nel Database & Posiziona sulla Mappa
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: AGGIUNGI INCONTRO AL CALENDARIO CONDIVISO -->
+  <div class="modal-overlay" id="addEventModal" aria-modal="true" role="dialog">
+    <div class="modal-glass-container">
+      <button class="btn-close-modal" aria-label="Chiudi Modale">✕</button>
+
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <span class="card-role-pod" style="width: fit-content;">Calendario & Meet</span>
+        <h2 style="font-size: 1.6rem; font-weight: 900; color: var(--ink);">Nuovo Incontro o Riunione di Gruppo</h2>
+        <p style="font-size: 0.88rem; color: var(--ink-soft);">
+          Pianifica una riunione con link Google Meet automatico visibile a tutti i soci o a un gruppo specifico.
+        </p>
+      </div>
+
+      <form id="addEventForm" style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="form-group">
+          <label class="form-label">Titolo Incontro *</label>
+          <input type="text" name="title" class="form-input" required placeholder="Es. Allineamento Formatori Scuole Superiori">
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Data Incontro *</label>
+            <input type="date" name="date" class="form-input" required value="2026-11-12">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Orario (Inizio - Fine) *</label>
+            <input type="text" name="time" class="form-input" required value="18:30 - 20:00">
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Gruppo / Destinatari *</label>
+            <select name="group" class="form-select" required>
+              <option value="Tutti i Soci">Tutta la Community PODS</option>
+              <option value="Tavolo Ecosistemi">Tavolo Ecosistemi & Innovazione</option>
+              <option value="Team Scuole">Team "Intelligenti, non artificiali"</option>
+              <option value="Mentors UPO">Community Mentoring UPO & SUN</option>
+              <option value="Corso Branding AL">Corso Branding AL & UPO</option>
+              <option value="Educazione Finanziaria">Team Educazione Finanziaria</option>
+              <option value="Consiglio Direttivo">Consiglio Direttivo</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tipologia Evento *</label>
+            <select name="typeLabel" class="form-select" required>
+              <option value="Plenaria Community">Plenaria Community</option>
+              <option value="Ecosistemi & Startup">Ecosistemi & Startup</option>
+              <option value="Progetto Scuole">Progetto Scuole</option>
+              <option value="Mentoring UPO">Mentoring UPO</option>
+              <option value="Branding & PA">Branding & PA</option>
+              <option value="Incontro Territoriale">Incontro Territoriale</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <label class="form-label">Link Google Meet</label>
+            <button type="button" id="btnGenMeet" style="background: none; border: none; font-size: 0.78rem; font-weight: 800; color: var(--blue); cursor: pointer; text-decoration: underline;">
+              ⚡ Genera Link Meet Automatico
+            </button>
+          </div>
+          <input type="url" name="meetLink" id="eventMeetInput" class="form-input" placeholder="https://meet.google.com/pod-..." value="https://meet.google.com/pod-meet-nov">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Luogo / Modalità</label>
+          <input type="text" name="locationAddress" class="form-input" value="Online su Google Meet" placeholder="Es. Online su Google Meet / Sede PODS Vercelli">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Descrizione e Ordine del Giorno</label>
+          <textarea name="description" class="form-textarea" rows="3" placeholder="Punti all'ordine del giorno, documenti di preparazione..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-ink" style="width: 100%; padding: 14px; border-radius: 999px; font-weight: 800; background: var(--blue); color: #fff; border: none; cursor: pointer;">
+          📅 Pubblica Incontro nel Calendario Condiviso
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: SINCRONIZZA CON GOOGLE CALENDAR -->
+  <div class="modal-overlay" id="gcalSyncModal" aria-modal="true" role="dialog">
+    <div class="modal-glass-container" style="max-width: 640px;">
+      <button class="btn-close-modal" aria-label="Chiudi Modale">✕</button>
+
+      <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="3" stroke="#1a73e8" stroke-width="2"/><path d="M16 2v4M8 2v4M3 10h18" stroke="#1a73e8" stroke-width="2"/><circle cx="12" cy="15" r="2.5" fill="#1a73e8"/></svg>
+          <span class="card-role-pod" style="color: #1a73e8; border-color: #1a73e8;">Sincronizzazione Live Google Calendar</span>
+        </div>
+        <h2 style="font-size: 1.6rem; font-weight: 900; color: var(--ink);">Aggiungi il Calendario PODS al tuo Calendar</h2>
+        <p style="font-size: 0.9rem; color: var(--ink-soft); line-height: 1.5;">
+          Sottoscrivendo questo calendario con un click, tutti gli incontri plenari, le sessioni di mentoring e le riunioni dei gruppi operativi verranno mostrati direttamente nella tua app di Google Calendar (o Apple Calendar / Outlook).
+        </p>
+      </div>
+
+      <!-- Box evidenziatore Sincronizzazione Automatica -->
+      <div style="background: #eef5fc; border: 1.5px solid #c7e0f8; border-radius: 14px; padding: 16px 20px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px;">
+        <div style="display: flex; align-items: center; gap: 8px; font-weight: 800; color: #1a73e8; font-size: 0.92rem;">
+          <span>⚡ Sincronizzazione bidirezionale sempre aggiornata:</span>
+        </div>
+        <p style="font-size: 0.85rem; color: #2c4a6f; margin: 0; line-height: 1.45;">
+          Non serve reinserire gli eventi a mano: quando un socio o il direttivo pubblica un nuovo incontro sulla piattaforma, Google Calendar riceve automaticamente l'aggiornamento tramite il feed iCal live certificato.
+        </p>
+      </div>
+
+      <!-- Pulsante principale: Aggiunta diretta a Google Calendar -->
+      <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
+        <a id="btnSubscribeGcalLink" href="#" target="_blank" rel="noopener" class="btn btn-ink" style="background: #1a73e8; color: #ffffff; padding: 15px 24px; border-radius: 999px; font-weight: 800; font-size: 1rem; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 14px rgba(26, 115, 232, 0.3);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="3" stroke="#fff" stroke-width="2"/><path d="M16 2v4M8 2v4M3 10h18" stroke="#fff" stroke-width="2"/><path d="M12 13v6M9 16h6" stroke="#fff" stroke-width="2"/></svg>
+          Aggiungi Subito a Google Calendar (1 Click)
+        </a>
+
+      <!-- Guida rapida di importazione in Google Calendar -->
+      <div style="background: #fafafa; border: 1px solid var(--gray-border); border-radius: 12px; padding: 14px 18px; margin-bottom: 20px;">
+        <div style="font-weight: 800; font-size: 0.88rem; color: var(--ink); margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+          <span>📥 Come importare subito tutti gli eventi in Google Calendar:</span>
+        </div>
+        <ol style="font-size: 0.82rem; color: var(--ink-soft); line-height: 1.5; margin: 0; padding-left: 20px;">
+          <li>Clicca sul pulsante <strong>"📥 Scarica File .ics"</strong> qui sotto per scaricare il file del calendario sul tuo dispositivo.</li>
+          <li>Apri <a href="https://calendar.google.com/calendar/u/0/r/settings/export" target="_blank" rel="noopener" style="color: var(--blue); font-weight: 700; text-decoration: underline;">Google Calendar &gt; Importazione ed esportazione ↗</a>.</li>
+          <li>Trascina o seleziona il file <code>pods-calendar.ics</code> scaricato e clicca <strong>Importa</strong>: tutti gli incontri compariranno all'istante nel tuo calendario personale!</li>
+        </ol>
+      </div>
+
+      <!-- Pulsanti principali -->
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+        <button type="button" class="btn btn-ink" onclick="window.downloadCalendarIcs()" style="background: var(--blue); color: #ffffff; padding: 14px 24px; border-radius: 999px; font-weight: 800; font-size: 0.95rem; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 14px rgba(40, 103, 174, 0.25);">
+          📥 Scarica File .ics per Google Calendar / Outlook / Apple
+        </button>
+
+        <div style="display: flex; gap: 10px;">
+          <a id="btnSubscribeGcalLink" href="#" target="_blank" rel="noopener" class="btn btn-line" style="flex: 1; padding: 11px; border-radius: 999px; font-weight: 800; background: #fff; border: 1.5px solid #1a73e8; color: #1a73e8; cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.84rem;">
+            📅 Sottoscrivi Feed Webcal
+          </a>
+          <button type="button" class="btn btn-line" onclick="window.copyLiveCalendarFeed()" style="flex: 1; padding: 11px; border-radius: 999px; font-weight: 700; background: #fff; border: 1.5px solid var(--gray-border); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.84rem;">
+            📋 Copia URL Feed Live
+          </button>
+        </div>
+      </div>
+
+      <!-- Box Google Workspace for Nonprofits -->
+      <div style="background: #fffbeb; border: 1.5px solid #fde68a; border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; font-size: 0.82rem; color: #78350f; line-height: 1.45;">
+        <strong>🏛️ Google Workspace Free per Associazioni (TechSoup & RUNTS):</strong><br>
+        PODS (APS ETS iscritta al RUNTS n. 182788) ha diritto a Google Workspace for Nonprofits <strong>gratuito al 100%</strong> (con caselle <code>@associazione-pods.it</code> e calendari condivisi nativi). <strong>Non serve aspettare!</strong> Puoi richiedere la convalida gratuita su TechSoup Italia in qualsiasi momento e nel frattempo usare già da ora il calendario della piattaforma.
+      </div>
+
+      <!-- Input con link del feed per copia manuale -->
+      <div class="form-group" style="margin-bottom: 16px;">
+        <label class="form-label">Link Feed iCal / Webcal Diretto:</label>
+        <div style="display: flex; gap: 8px;">
+          <input type="text" id="gcalFeedUrlInput" readonly class="form-input" style="background: #f7f7f7; font-size: 0.82rem; font-family: monospace;" value="https://pods-community-platform-pods6.vercel.app/api/calendar.ics">
+          <button type="button" class="btn btn-ink" onclick="window.copyLiveCalendarFeed()" style="padding: 0 16px; border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: 800; cursor: pointer; background: var(--ink); color: #fff; border: none; white-space: nowrap;">
+            Copia
+          </button>
+        </div>
+      </div>
+
+      <div style="font-size: 0.8rem; color: var(--ink-soft); line-height: 1.45; border-top: 1px solid var(--gray-border); padding-top: 12px;">
+        💡 <strong>Per Apple Calendar (iPhone/Mac) o Outlook:</strong> clicca su <em>"Copia URL Feed Live"</em>, apri l'app Calendario, scegli <em>File &gt; Nuova sottoscrizione calendario</em> e incolla l'indirizzo.
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast-notice" id="toastNotice"></div>
+
+  <!-- OFFICIAL PODS FOOTER -->
+  <footer class="site-footer">
+    <div class="foot">
+      <div class="foot-logo">
+        <svg class="foot-wordmark" viewBox="121 1028 962 336" aria-hidden="true">
+          <use href="img/sprite.svg#p-letters"/>
+        </svg>
+      </div>
+      <address>
+        <strong>PODS — Piemonte Orientale Digitale e Solidale APS ETS</strong><br>
+        Associazione di Promozione Sociale — Ente del Terzo Settore • Iscritta al RUNTS (Rep. n. 182788)<br>
+        Sede legale: Via Gaudenzio Ferrari 17, 13100 Vercelli (VC) • C.F. 94047260024<br>
+        Email: <a href="mailto:info@associazione-pods.it">info@associazione-pods.it</a> • 
+        Sito Istituzionale: <a href="https://associazione-pods.it" target="_blank" rel="noopener">associazione-pods.it</a>
+      </address>
+      <p class="copy">
+        Piattaforma Interna Community Hub • 6 Province del Piemonte Orientale (VC, NO, AL, AT, BI, VB)<br>
+        © 2026 PODS APS ETS. Territorio, Competenze e Solidarietà.
+      </p>
+    </div>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

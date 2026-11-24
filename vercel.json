@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "name": "pods-community-platform",
+  "rewrites": [
+    { "source": "/api/calendar.ics", "destination": "/api/calendar" },
+    { "source": "/calendar.ics", "destination": "/api/calendar" }
+  ]
+}
